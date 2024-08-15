@@ -1,0 +1,67 @@
+To transfer the Docker image `cluster:xfusion` from App Server 1 to App Server 3, you can follow these steps:
+
+### Step 1: Save the Docker image on App Server 1
+1. SSH into App Server 1.
+
+   ```bash
+   ssh user@app-server-1
+   ```
+
+2. Save the Docker image `cluster:xfusion` as a tar archive.
+
+   ```bash
+   docker save -o /tmp/cluster_xfusion.tar cluster:xfusion
+   ```
+
+   - `-o /tmp/cluster_xfusion.tar`: Specifies the output file for the saved image.
+
+### Step 2: Transfer the image archive to App Server 3
+1. Use `scp` to transfer the image archive from App Server 1 to App Server 3.
+
+   ```bash
+   scp /tmp/cluster_xfusion.tar user@app-server-3:/tmp/
+   ```
+
+   - Replace `user` with the appropriate username for the servers.
+   - `/tmp/cluster_xfusion.tar`: Path to the image archive on App Server 1.
+   - `user@app-server-3:/tmp/`: Destination path on App Server 3.
+
+### Step 3: Load the image archive on App Server 3
+1. SSH into App Server 3.
+
+   ```bash
+   ssh user@app-server-3
+   ```
+
+2. Load the Docker image from the archive.
+
+   ```bash
+   docker load -i /tmp/cluster_xfusion.tar
+   ```
+
+   - `-i /tmp/cluster_xfusion.tar`: Specifies the input file for loading the image.
+
+3. Verify that the image is loaded with the correct name and tag.
+
+   ```bash
+   docker images | grep cluster
+   ```
+
+   You should see `cluster:xfusion` listed among the Docker images.
+
+### Step 4: (Optional) Cleanup
+1. You can remove the tar archive from both servers if it's no longer needed:
+
+   On App Server 1:
+
+   ```bash
+   rm /tmp/cluster_xfusion.tar
+   ```
+
+   On App Server 3:
+
+   ```bash
+   rm /tmp/cluster_xfusion.tar
+   ```
+
+This process effectively transfers the Docker image from one server to another, ensuring that it can be used for testing or other purposes on App Server 3.
